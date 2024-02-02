@@ -1,17 +1,15 @@
 package de.cheaterpaul.simpleshopsfix.mixin;
 
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.LogManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import wolforce.simpleshops.util.UtilItemStack;
 
 @Pseudo
 @Mixin(targets = "wolforce.simpleshops.SimpleShopTileEntity")
@@ -25,12 +23,19 @@ public abstract class SimpleShopTileEntityMixin {
         int maxStackSize = stack.getMaxStackSize();
         int fullStacks = amount / maxStackSize;
         for (int i = 0; i < fullStacks; i++){
-            spawn(world, pos, UtilItemStack.setCount(stack, maxStackSize));
+            spawn(world, pos, setCount(stack, maxStackSize));
         }
         int remainder = amount % maxStackSize;
         if(remainder > 0){
-            spawn(world, pos, UtilItemStack.setCount(stack, remainder));
+            spawn(world, pos, setCount(stack, remainder));
         }
         ci.cancel();
+    }
+
+    @Unique
+    private static ItemStack setCount(ItemStack stack, int newCount) {
+        ItemStack newStack = stack.copy();
+        newStack.setCount(newCount);
+        return newStack;
     }
 }
