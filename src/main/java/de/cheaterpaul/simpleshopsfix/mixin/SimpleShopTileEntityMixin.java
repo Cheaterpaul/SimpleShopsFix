@@ -18,6 +18,9 @@ public abstract class SimpleShopTileEntityMixin {
 
     @Shadow public abstract void spawn(Level world, Vec3 pos, ItemStack stack);
 
+    /**
+     * Fix stack size
+     */
     @Inject(method = "spawn(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/item/ItemStack;I)V", at = @At("HEAD"), cancellable = true)
     private void fixSpawn(Level world, Vec3 pos, ItemStack stack, int amount, CallbackInfo ci) {
         int maxStackSize = stack.getMaxStackSize();
