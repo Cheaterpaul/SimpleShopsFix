@@ -1,22 +1,23 @@
 package de.cheaterpaul.simpleshopsfix.mixin;
 
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Pseudo;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Pseudo
+@Debug
 @Mixin(targets = "wolforce.simpleshops.SimpleShopTileEntity")
 public abstract class SimpleShopTileEntityMixin {
 
 
     @Shadow public abstract void spawn(Level world, Vec3 pos, ItemStack stack);
+
+    @Shadow public abstract ItemStack getCost();
 
     /**
      * Fix stack size
@@ -33,6 +34,13 @@ public abstract class SimpleShopTileEntityMixin {
             spawn(world, pos, setCount(stack, remainder));
         }
         ci.cancel();
+    }
+
+    @Inject(method = "tryBuy", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z", shift = At.Shift.BEFORE), cancellable = true)
+    private void checkNBT(Player player, ItemStack input, boolean isCreative, CallbackInfo ci) {
+        if (!ItemStack.isSameItemSameTags(input, getCost())) {
+            ci.cancel();
+        }
     }
 
     @Unique
