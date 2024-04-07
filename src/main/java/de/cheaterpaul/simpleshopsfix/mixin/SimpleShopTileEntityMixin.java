@@ -36,7 +36,7 @@ public abstract class SimpleShopTileEntityMixin {
         ci.cancel();
     }
 
-    @Inject(method = "tryBuy", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z", shift = At.Shift.BEFORE), cancellable = true)
+    @Inject(method = "tryBuy(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z", shift = At.Shift.BEFORE), cancellable = true)
     private void checkNBT(Player player, ItemStack input, boolean isCreative, CallbackInfo ci) {
         if (!ItemStack.isSameItemSameTags(input, getCost())) {
             ci.cancel();

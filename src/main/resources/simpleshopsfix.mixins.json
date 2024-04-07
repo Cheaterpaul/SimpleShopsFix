@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "de.cheaterpaul.simpleshopsfix.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "SimpleShopsFix.refmap.json",
+  "refmap": "simpleshopsfix.refmap.json",
   "plugin": "de.cheaterpaul.simpleshopsfix.SimpleShopsFixMixinPlugin",
   "mixins": [
     "SimpleShopTileEntityMixin"
